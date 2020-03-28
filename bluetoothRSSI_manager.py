@@ -36,10 +36,14 @@ class BluetoothCTL:
     def parse_device_info(self, info_string):
         """Find latest device RSSI"""
         # import pdb; pdb.set_trace()
-        rssi_info = re.search(r"(-\d+)", info_string)
-        rssi = rssi_info.group(0)
-        
-        return rssi
+        rssi = None
+        try:
+            rssi_info = re.search(r"(-\d+)", info_string)
+            rssi = rssi_info.group(0)
+        except:
+            pass
+        finally:
+            return rssi
 
     def shutdown_screen(self, timeout=10):
         """Shut down screen for power saving"""

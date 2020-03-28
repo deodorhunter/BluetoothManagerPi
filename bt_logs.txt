@@ -952,3 +952,4 @@ hci0 dev_found: E0:DC:FF:05:AE:2D type BR/EDR rssi -80 flags 0x0000
 hci0 dev_found: E0:DC:FF:05:AE:2D type BR/EDR rssi -74 flags 0x0000 
 hci0 dev_found: E0:DC:FF:05:AE:2D type BR/EDR rssi -81 flags 0x0001 
 confirm_name succeeded for E0:DC:FF:05:AE:2D
+hci0 dev_found: E0:DC:FF:05:AE:2D type BR/EDR rssi -55 flags 0x0000 
