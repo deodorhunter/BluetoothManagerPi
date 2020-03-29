@@ -3,6 +3,7 @@ from datetime import datetime
 import pexpect
 import time
 import re
+import random
 
 
 class BluetoothCTLError(Exception):
@@ -19,6 +20,7 @@ class BluetoothCTL:
         self.RSSI = None
         self.last_log_count = None
         self.state = True
+        self.mouse = Controller()
 
     def run_command(self, command=None, pause=0, returnOutput=False):
         """Run command against bash"""
@@ -64,14 +66,14 @@ class BluetoothCTL:
 
     def powerup_screen(self, timeout=0):
         """Power up screen, the world needs it's hero"""
+        self.simulate_input()
         if self.state:
             return
 
         time.sleep(timeout)
-        print('[{} - LOG] Mirror will wake up, someone needs it!'.format(datetime.now))
+        print('[{} - LOG] Mirror will wake up, someone needs it!'.format(datetime.now()))
         # simulate mouse input
-        mouse = Controller()
-        mouse.move(-150, -150)
+        # self.simulate_input()
         commands = [
             "xset dpms 300 300 300",
             "xset s 300",
@@ -82,8 +84,17 @@ class BluetoothCTL:
 
         self.state=True
 
+    def simulate_input(self):
+        numbers = list( range(-150, -1) ) + list( range(1, 150) )
+        x = random.choice(numbers)
+        y = random.choice(numbers)
+        print("[{} - LOG] simulating input. x: {}, y: {}".format(datetime.now(), x, y))
+        self.mouse.move(x, y)
+
     def calculate_proximity(self, rssi):
         """Calculate proximity of device"""
+        if rssi is None:
+            return
         rssi = int(rssi)
         RSSI = self.RSSI
         if RSSI is None:
@@ -92,13 +103,19 @@ class BluetoothCTL:
             # print('[LOG] no one is home, shutting down')
             # self.shutdown_screen()
         if rssi < 0:
-            if rssi > -75:
-                if RSSI - 20 > rssi:
+            if rssi > -70:
+                if RSSI - 5 > rssi:
                     # Phone bearing human is going away! :(
+                    print('human going away')
                     self.shutdown_screen(60)
-                else:
+                elif RSSI - 5 < rssi:
                     # Phone bearing human is coming closer! :)
+                    print('coming closer!')
                     self.powerup_screen()
+                else:
+                    # Keep going, keep up that mirror!
+                    print("[{} - LOG] keeping up!". format(datetime.now()))
+                    self.simulate_input()
                     
             if rssi < -75:
                 # Human is too far away to use me, gonna sleep (zzz)
