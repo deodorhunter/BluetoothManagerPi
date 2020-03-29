@@ -1,0 +1,5 @@
+pexpect==4.8.0
+ptyprocess==0.6.0
+pynput==1.6.8
+python-xlib==0.26
+six==1.14.0
